@@ -1,0 +1,104 @@
+plugins {
+    id "dev.architectury.loom" version "0.11.0-SNAPSHOT"
+    id 'maven-publish'
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+}
+
+apply {
+    from 'https://files.saps.dev/ci/git-md-changelog.gradle'
+}
+
+def ENV = System.getenv()
+
+version = "${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}+mc${minecraft_version}"
+group = 'com.sunekaer.mods'
+archivesBaseName = 'Mute'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+loom {
+    silentMojangMappingsLicense()
+
+    forge {
+        mixinConfigs = [
+        ]
+
+        dataGen {
+            mod "toolkit"
+        }
+
+        launches {
+            data {
+                arg "--existing", file("src/main/resources").absolutePath
+            }
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.18.2:2022.03.13")
+    }
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+
+    manifest {
+        attributes([
+                "Specification-Title"     : "mute",
+                "Specification-Vendor"    : "Sunekaer",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "Sunekaer",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenForge(MavenPublication) {
+            artifactId = rootProject.archivesBaseName
+            from components.java
+        }
+    }
+
+    repositories {
+        if (ENV.NANITE_DEPLOY) {
+            maven {
+                url "https://maven.nanite.dev/"
+                credentials {
+                    username = "nanite"
+                    password = "${ENV.NANITE_DEPLOY}"
+                }
+            }
+        }
+    }
+}
+
+if (ENV.CURSE_DEPLOY) {
+    curseforge {
+        apiKey = ENV.CURSE_DEPLOY
+        project {
+            id = project.curseforge_id
+            releaseType = "release"
+            addGameVersion "Forge"
+            addGameVersion "${minecraft_version}"
+            mainArtifact(jar)
+            changelog = getGitChangelog
+            changelogType = 'markdown'
+        }
+    }
+}

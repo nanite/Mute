@@ -1,0 +1,24 @@
+modLoader="javafml" #mandatory
+loaderVersion="[40,)" #mandatory
+license = "All Rights Reserved"
+[[mods]] #mandatory
+modId="mute" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Mute" #mandatory
+authors="Sunekaer" #optional
+description='''
+Mutes sounds in the game based on config.
+'''
+[[dependencies.mute]]
+modId="forge"
+mandatory=true
+versionRange="[40,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.mute]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18,)"
+ordering="NONE"
+side="BOTH"
