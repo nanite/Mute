@@ -13,14 +13,14 @@ Mutes sounds in the game based on config.
 
 [[dependencies.mute]]
 modId = "neoforge"
-mandatory = true
-versionRange = "[20.2,)"
+required = true
+versionRange = "[20.4,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.mute]]
 modId="minecraft"
-mandatory=true
-versionRange="[1.20.2,)"
+required=true
+versionRange="[1.20.4,)"
 ordering="NONE"
 side="BOTH"
