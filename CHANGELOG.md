@@ -1,3 +1,3 @@
 # Changelog
 
-- Updated CI / Build Script
+Update to 1.20.2 & NeoForge

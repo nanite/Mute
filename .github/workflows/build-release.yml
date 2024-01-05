@@ -14,7 +14,6 @@ jobs:
       java-version: 17
       changelog-file: "./CHANGELOG.md"
       release-to-github: false
-      release-files: "./build/libs/*.jar"
     secrets:
       nanite-token: ${{ secrets.NANITE_DEPLOY }}
       curse-token: ${{ secrets.CURSE_DEPLOY }}

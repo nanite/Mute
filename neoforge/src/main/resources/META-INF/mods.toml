@@ -1,0 +1,26 @@
+modLoader="javafml" #mandatory
+loaderVersion="[1,)" #mandatory
+license = "All Rights Reserved"
+
+[[mods]] #mandatory
+modId="mute" #mandatory
+version = "${version}" #mandatory
+displayName="Mute" #mandatory
+authors="Sunekaer" #optional
+description='''
+Mutes sounds in the game based on config.
+'''
+
+[[dependencies.mute]]
+modId = "neoforge"
+mandatory = true
+versionRange = "[20.2,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.mute]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.2,)"
+ordering="NONE"
+side="BOTH"
