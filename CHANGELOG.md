@@ -1,3 +1,3 @@
 # Changelog
 
-Update to 1.20.4
+Update to architectury version 11.0.10
