@@ -1,4 +1,49 @@
 {
-  "curseID" : 625183,
-  "maven" : "https://maven.nanite.dev/releases/com/sunekaer/mods/mute"
+  "spec": 2,
+  "maven": [
+    {
+      "name": "Common",
+      "url": "https://maven.nanite.dev/releases/com/sunekaer/mods/mute-common"
+    },
+    {
+      "name": "Forge",
+      "url": "https://maven.nanite.dev/releases/com/sunekaer/mods/mute-forge"
+    },
+    {
+      "name": "Fabric",
+      "url": "https://maven.nanite.dev/releases/com/sunekaer/mods/mute-fabric"
+    },
+    {
+      "name": "NeoForge",
+      "url": "https://maven.nanite.dev/releases/com/sunekaer/mods/mute-neoforge"
+    }
+  ],
+  "providers": [
+    {
+      "type": "identity",
+      "name": "Modrinth",
+      "id": "DqmgBVPB",
+      "slug": "mute-mod",
+      "variants": ["forge", "fabric", "neoforge"]
+    },
+    {
+      "type": "identity",
+      "name": "CurseForge",
+      "id": "625183",
+      "slug": "mute",
+      "variants": ["forge", "fabric", "neoforge"]
+    },
+    {
+      "type": "url",
+      "name": "GitHub",
+      "url": "https://github.com/nanite/Mute",
+      "variants": ["forge", "fabric", "neoforge", "common"]
+    }
+  ],
+  "authors": [
+    {
+      "name": "Sunekaer",
+      "role": "Owner"
+    }
+  ] 
 }
