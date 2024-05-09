@@ -13,9 +13,9 @@ public class Mute {
     public static final String MODID = "mute";
 
     public Mute() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
-
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "", (c, b) -> true));
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
+        }
 
     }
 }
