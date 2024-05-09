@@ -16,13 +16,13 @@ side="CLIENT"
 [[dependencies.mute]]
 modId = "neoforge"
 required = true
-versionRange = "[20.5,)"
+versionRange = "[20.6,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.mute]]
 modId="minecraft"
 required=true
-versionRange="[1.20.5,)"
+versionRange="[1.20.6,)"
 ordering="NONE"
 side="BOTH"
