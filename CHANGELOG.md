@@ -1,3 +1,3 @@
 # Changelog
 
-Update to architectury version 11.0.10
+Update to 1.21
