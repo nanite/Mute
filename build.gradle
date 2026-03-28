@@ -1,63 +1,82 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
-    id "me.modmuss50.mod-publish-plugin" version "0.4.5"
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.141'
+    id 'idea'
+    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
 
-architectury {
-    minecraft = rootProject.minecraft_version
+version = mod_version
+group = maven_group
+
+base {
+    archivesName = mod_id
 }
 
-subprojects {
-    apply plugin: "dev.architectury.loom"
-    apply plugin: "maven-publish"
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-    loom {
-        silentMojangMappingsLicense()
+neoForge {
+    version = project.neoforge_version
+
+    runs {
+        configureEach {
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+
+        client {
+            client()
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+        }
     }
 
-    dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
-        mappings loom.officialMojangMappings()
-        // The following line declares the yarn mappings you may select this one as well.
-        // mappings "net.fabricmc:yarn:1.20.1+build.10:v2"
-    }
-
-    publishing {
-        repositories {
-            if (providers.environmentVariable("NANITE_TOKEN").isPresent()) {
-                maven {
-                    url "https://maven.nanite.dev/releases"
-                    credentials {
-                        username = "nanite"
-                        password = providers.environmentVariable("NANITE_TOKEN").get()
-                    }
-                }
-            }
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
         }
     }
 }
 
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
 
-    archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
-    group = rootProject.maven_group
 
+def replaceProperties = [
+        mod_id: mod_id,
+        minecraft_version: minecraft_version,
+        minecraft_version_range: minecraft_version_range,
+        neoforge_version: neoforge_version,
+        neoforge_version_range: neoforge_version_range,
+        version: version,
+]
+
+processResources {
+    inputs.properties replaceProperties
+
+    filesMatching(["META-INF/neoforge.mods.toml", "fabric.mod.json"]) {
+        expand replaceProperties
+    }
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
     repositories {
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.release = 21
-    }
-
-    java {
-        withSourcesJar()
+        if (providers.environmentVariable("NANITE_TOKEN").isPresent()) {
+            maven {
+                url "https://maven.nanite.dev/releases"
+                credentials {
+                    username = "nanite"
+                    password = providers.environmentVariable("NANITE_TOKEN").get()
+                }
+            }
+        }
     }
 }
 
@@ -67,15 +86,9 @@ publishMods {
     version = "${mod_version}"
     type = STABLE
 
-//    def forgeOptions = publishOptions {
-//        file = project.provider { project(":forge").tasks.remapJar }.flatMap { it.archiveFile }
-//        displayName = "[FORGE][${minecraft_version}] ${project.name} ${mod_version}"
-//        modLoaders.add("forge")
-//    }
-
     def neoForge = publishOptions {
-        file = project.provider { project(":neoforge").tasks.remapJar }.flatMap { it.archiveFile }
-        displayName = "[NEOFORGE][${minecraft_version}] ${project.name} ${mod_version}"
+        file = project.provider { tasks.jar }.flatMap { it.archiveFile }
+        displayName = "[NEOFORGE][${minecraft_version}] Mute ${mod_version}"
         modLoaders.add("neoforge")
     }
 
@@ -91,21 +104,25 @@ publishMods {
         minecraftVersions.add("${minecraft_version}")
     }
 
-//    curseforge("curseforgeForge") {
-//        from(curseForgeOptions, forgeOptions)
-//    }
-
     curseforge("curseforgeNeoForge") {
         from(curseForgeOptions, neoForge)
     }
 
     if (providers.environmentVariable("MODRINTH_TOKEN").getOrNull() != null) {
-//        modrinth("modrinthForge") {
-//            from(modrinthOptions, forgeOptions)
-//        }
-
         modrinth("modrinthNeoforge") {
             from(modrinthOptions, neoForge)
         }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
     }
 }

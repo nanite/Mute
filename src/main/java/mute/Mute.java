@@ -1,7 +1,8 @@
 package mute;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -10,10 +11,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 public class Mute {
     public static final String MODID = "mute";
 
-    public Mute() {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
-        }
-
+    public Mute(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 }
