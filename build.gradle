@@ -68,11 +68,12 @@ java {
 
 publishing {
     publications {
-        mavenMod {
-            artifactId = "${rootProject.archives_base_name}-${project.name}"
+        mavenJava(MavenPublication) {
+            artifactId = base.archivesName.get()
             from components.java
         }
     }
+
 
     repositories {
         if (providers.environmentVariable("NANITE_TOKEN").isPresent()) {
